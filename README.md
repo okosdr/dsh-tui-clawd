@@ -1,4 +1,4 @@
-# dsh-tui-clawd 🦀
+# dsh-tui-clawd 
 
 
 
