@@ -24,6 +24,15 @@ dsh-tui-clawd
 | `LogoV2.js` | the launchpad hides the block title when only the mascot fits |
 | `companion/deepy.js` + `companion/skins.js` | **theme colour** and **auto-scaling** (see below) |
 | `lib/types/i18n.js` + `~/.dsh-tui/lang.lock` | UI language **sealed** (`en` by default) |
+| `Spinner/SpinnerAnimationRow.js` | the `Working…` line under the last message shows a small stepping crab instead of the rotating glyph |
+
+### Inline working crab
+
+Whatever tools the agent is running, dsh-TUI shows one animated row between the
+last message and the prompt (`· Looking for files … · 1s · tool x2`). Upstream
+puts a rotating glyph ("the moon") at its left; this package swaps it for a
+three-row crab whose legs step with the same 140 ms beat. Turn it off with
+`--no-inline`.
 
 ### Colours follow the theme
 

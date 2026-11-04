@@ -80,6 +80,7 @@ Flags:
   --lang <en|zh|keep> language file (default en; only written if missing)
   --no-layout         skip the short-terminal layout patch
   --no-mascot         skip theme colour / auto-scaling patches
+  --no-inline         keep the rotating spinner glyph (skip the working crab)
   --dry-run           report what would change
   --quiet             only errors
   --strict            exit 1 when nothing was patched`);
@@ -129,7 +130,7 @@ Flags:
   let changed = 0;
   for (const dir of installs) {
     say(`\n${dir}`);
-    for (const row of apply(dir, { layout: !flags.has('--no-layout'), mascot: !flags.has('--no-mascot'), dryRun: flags.has('--dry-run') })) {
+    for (const row of apply(dir, { layout: !flags.has('--no-layout'), mascot: !flags.has('--no-mascot'), inline: !flags.has('--no-inline'), dryRun: flags.has('--dry-run') })) {
       say(`  ${row.result.padEnd(15)} ${row.label}`);
       if (row.result === 'patched' || row.result === 'would patch') changed += 1;
     }
