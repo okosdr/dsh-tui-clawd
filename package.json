@@ -1,0 +1,40 @@
+{
+  "name": "dsh-tui-clawd",
+  "version": "1.0.0",
+  "description": "Blue Clawd crab mascot, English UI and a short-terminal layout fix for dsh-TUI (DeepSeek Harness terminal). Reapplied after dsh-tui updates.",
+  "type": "module",
+  "bin": {
+    "dsh-tui-clawd": "bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "postinstall": "node bin/cli.js install --quiet"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-tui",
+    "deepseek-harness",
+    "clawd",
+    "mascot",
+    "terminal",
+    "theme"
+  ],
+  "author": "okosdr",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/okosdr/dsh-tui-clawd.git"
+  },
+  "bugs": {
+    "url": "https://github.com/okosdr/dsh-tui-clawd/issues"
+  },
+  "homepage": "https://github.com/okosdr/dsh-tui-clawd#readme"
+}
