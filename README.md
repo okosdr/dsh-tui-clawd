@@ -4,8 +4,8 @@
 
 Blue **Clawd** (the Claude Code crab) instead of the pixel whale in
 [**dsh-TUI**](https://github.com/ccch1mneyyy/dsh-TUI) — the terminal UI for
-DeepSeek Harness — plus English UI defaults and a small layout fix for short
-terminals.
+DeepSeek Harness — plus English UI defaults, a short-terminal layout fix, and a
+mascot that follows your theme and terminal size.
 
 dsh-TUI reinstalls its `node_modules` on every `/update`, which wipes custom
 art. This package re-applies everything with one command.
@@ -20,9 +20,37 @@ dsh-tui-clawd
 |---|---|
 | `assets/deepy/frames.json` | launch page mascot (20 animations, 198 frames) → crab |
 | `lib/types/components/whaleFrames.js` | classic whale splash sprite (22 frames) → crab |
-| `lib/types/components/launchpadLayout.js` | on short terminals show the mascot **instead of** the block `DEEPSEEK HARNESS` title |
-| `lib/types/components/LogoV2.js` | the launchpad hides the block title when only the mascot fits |
+| `launchpadLayout.js` | on short terminals show the mascot **instead of** the block `DEEPSEEK HARNESS` title |
+| `LogoV2.js` | the launchpad hides the block title when only the mascot fits |
+| `companion/deepy.js` + `companion/skins.js` | **theme colour** and **auto-scaling** (see below) |
 | `~/.dsh-tui/lang.json` | UI language (`en` by default, only written when missing) |
+
+### Colours follow the theme
+
+The crab takes the active theme's accent colour, so `/theme` recolours it live:
+
+| Theme | Crab |
+|---|---|
+| `auto` (default) | DeepSeek blue `#4E6FFF` |
+| `pink-night` | `#F27BA6` |
+| `claude-dark` | `#D77757` |
+| `codex-lavender` | `#A69BE8` |
+| `dark` | `#7DA1DE` |
+
+Eyes are derived from the body colour (28 % brightness), so contrast survives
+in both dark and light palettes.
+
+### Auto-scaling
+
+The sprite is re-rendered on every frame instead of using cached 3× frames:
+
+| Terminal | Crab |
+|---|---|
+| ≥ 100 columns and ≥ 30 rows | 3× (36 × 24 px in the 42 × 30 canvas) |
+| smaller | 2× (24 × 16 px) |
+
+The layout keeps its 42 × 30 cell budget, so nothing is clipped; the crab just
+grows and shrinks with the window.
 
 With the layout patch:
 
@@ -38,17 +66,12 @@ With the layout patch:
 npm install -g dsh-tui-clawd
 ```
 
-The `postinstall` step patches every detected dsh-TUI installation
-(global npm and `~/.dsh/profiles/*`). Then restart the TUI:
+Then run it once (npm ≥ 11 blocks install scripts by default, so the
+`postinstall` hook may be skipped):
 
 ```bash
-dst          # or: dsh-tui
-```
-
-### Without a global install
-
-```bash
-npx dsh-tui-clawd
+dsh-tui-clawd
+dst          # restart the TUI
 ```
 
 ### After a dsh-TUI update
@@ -73,6 +96,7 @@ Flags:
 ```
 --lang <en|zh|keep>   language file to write (default: en, only if missing)
 --no-layout           skip the short-terminal layout patch
+--no-mascot           skip the theme colour / auto-scaling patches
 --dry-run             report what would change, write nothing
 --quiet               only errors
 --strict              exit 1 when nothing was patched
@@ -110,9 +134,13 @@ did not apply and the package needs an update.
 
 ## По-русски
 
-Краб Clawd вместо кита на стартовом экране dsh-TUI, английский интерфейс и
-фикс: в низком окне показывается краб вместо надписи `DEEPSEEK HARNESS`,
-в высоком — и краб, и надпись.
+Краб Clawd вместо кита в dsh-TUI, английский интерфейс, фикс для низкого окна
+(в узком окне показывается краб вместо надписи `DEEPSEEK HARNESS`, в высоком —
+и краб, и надпись), а также:
+
+- **цвет краба берётся из акцентного цвета активной темы** (`/theme`), в режиме
+  `auto` — фирменный синий DeepSeek;
+- **авто-масштаб**: 3× на большом окне, 2× на маленьком.
 
 ```powershell
 npm install -g dsh-tui-clawd
