@@ -63,6 +63,28 @@ function ensureLanguage() {
   }
 }
 
+/** PID of the last launched dsh-tui if that process is still alive. */
+function runningTuiPid() {
+  try {
+    const file = path.join(os.homedir(), '.dsh-tui', 'last-run.json');
+    const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+    const pid = data && data.pid;
+    if (!pid) return undefined;
+    process.kill(pid, 0);
+    return pid;
+  } catch {
+    return undefined;
+  }
+}
+
+function warnIfRunning() {
+  const pid = runningTuiPid();
+  if (pid !== undefined) {
+    say(`\n⚠  dsh-tui is STILL RUNNING (pid ${pid}). Patches only apply to a new process —`);
+    say('   close the TUI window (or `Stop-Process -Id ' + pid + ' -Force`) and run `dst` again.');
+  }
+}
+
 function main() {
   const installs = findDshTuiInstalls();
 
@@ -113,6 +135,7 @@ Flags:
       for (const row of revert(dir)) say(`  ${row.result.padEnd(10)} ${row.label}`);
     }
     say('\nDone. Restart dsh-tui (`dst`) to see the original whale again.');
+    warnIfRunning();
     return 0;
   }
 
@@ -137,6 +160,7 @@ Flags:
   }
   say(`\n${ensureLanguage()}`);
   say(changed > 0 ? 'Restart dsh-tui (`dst`) to apply.' : 'Already up to date.');
+  warnIfRunning();
   if (flags.has('--dry-run')) say('(dry run: nothing was written)');
   return strict && changed === 0 && !flags.has('--dry-run') ? 1 : 0;
 }
