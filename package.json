@@ -1,6 +1,6 @@
 ﻿{
   "name": "dsh-tui-clawd",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Blue Clawd crab mascot, English UI and a short-terminal layout fix for dsh-TUI (DeepSeek Harness terminal). Reapplied after dsh-tui updates.",
   "type": "module",
   "bin": {
@@ -38,6 +38,7 @@
   },
   "homepage": "https://github.com/okosdr/dsh-tui-clawd#readme"
 }
+
 
 
 
