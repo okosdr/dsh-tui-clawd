@@ -37,13 +37,27 @@ function langPath() {
 
 function ensureLanguage() {
   const lang = langFlag ?? 'en';
-  if (lang === 'keep') return 'language: kept';
-  const file = langPath();
-  if (fs.existsSync(file) && langFlag === undefined) return 'language: already set';
+  if (lang === 'keep') return 'language: kept (not sealed)';
+  const dir = path.join(os.homedir(), '.dsh-tui');
   try {
-    fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, `${JSON.stringify({ lang }, null, 2)}\n`, 'utf8');
-    return `language: ${lang}`;
+    fs.mkdirSync(dir, { recursive: true });
+    // 1. persisted /lang choice
+    fs.writeFileSync(path.join(dir, 'lang.json'), `${JSON.stringify({ lang }, null, 2)}\n`, 'utf8');
+    // 2. hard seal: the patched i18n.js reads this file and refuses to switch
+    fs.writeFileSync(path.join(dir, 'lang.lock'), `${lang}\n`, 'utf8');
+    // 3. keep the /settings document in sync
+    const settingsFile = path.join(dir, 'settings.json');
+    let settings = { version: 1, values: {}, imported: { from: 'none', at: 0 } };
+    try {
+      settings = JSON.parse(fs.readFileSync(settingsFile, 'utf8'));
+    } catch {
+      /* fresh or unreadable document: start from the default shape */
+    }
+    if (settings === null || typeof settings !== 'object') settings = { version: 1, values: {} };
+    if (settings.values === null || typeof settings.values !== 'object') settings.values = {};
+    settings.values.lang = lang;
+    fs.writeFileSync(settingsFile, `${JSON.stringify(settings, null, 2)}\n`, 'utf8');
+    return `language: ${lang} (sealed)`;
   } catch (error) {
     return `language: failed (${error.message})`;
   }

@@ -23,7 +23,7 @@ dsh-tui-clawd
 | `launchpadLayout.js` | on short terminals show the mascot **instead of** the block `DEEPSEEK HARNESS` title |
 | `LogoV2.js` | the launchpad hides the block title when only the mascot fits |
 | `companion/deepy.js` + `companion/skins.js` | **theme colour** and **auto-scaling** (see below) |
-| `~/.dsh-tui/lang.json` | UI language (`en` by default, only written when missing) |
+| `lib/types/i18n.js` + `~/.dsh-tui/lang.lock` | UI language **sealed** (`en` by default) |
 
 ### Colours follow the theme
 
@@ -46,11 +46,34 @@ The sprite is re-rendered on every frame instead of using cached 3× frames:
 
 | Terminal | Crab |
 |---|---|
-| ≥ 100 columns and ≥ 30 rows | 3× (36 × 24 px in the 42 × 30 canvas) |
-| smaller | 2× (24 × 16 px) |
+| ≥ 110 columns and ≥ 34 rows | 3× (36 × 24 px in the 42 × 30 canvas) |
+| below 96 columns or 28 rows | 2× (24 × 16 px) |
+
+The thresholds are deliberately **hysteretic**: the crab only shrinks once the
+window drops well below the boundary and only grows back once it is comfortably
+past it. Without that gap, dragging the window edge across the threshold flipped
+the scale on every resize frame — visible as jitter and as the sprite appearing
+to stretch horizontally. The width is also clamped so the sprite never exceeds
+the terminal.
 
 The layout keeps its 42 × 30 cell budget, so nothing is clipped; the crab just
 grows and shrinks with the window.
+
+### Sealed language
+
+`dsh-tui-clawd` writes `~/.dsh-tui/lang.json`, `~/.dsh-tui/settings.json` and a
+`~/.dsh-tui/lang.lock`, then patches `i18n.js` so the lock wins over the
+`DSH_TUI_LANG` env var, the cordis config, the locale guess and the `/lang`
+command. English stays English — `/lang zh` is ignored while the lock exists.
+
+To unseal, delete the lock file:
+
+```bash
+rm ~/.dsh-tui/lang.lock          # Windows: del %USERPROFILE%\.dsh-tui\lang.lock
+```
+
+Or install with `--lang zh` to seal Chinese instead, `--lang keep` to leave the
+language alone.
 
 With the layout patch:
 
