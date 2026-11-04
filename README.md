@@ -1,5 +1,7 @@
 # dsh-tui-clawd 🦀
 
+
+
 Blue **Clawd** (the Claude Code crab) instead of the pixel whale in
 [**dsh-TUI**](https://github.com/ccch1mneyyy/dsh-TUI) — the terminal UI for
 DeepSeek Harness — plus English UI defaults and a small layout fix for short
