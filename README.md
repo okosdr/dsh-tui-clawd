@@ -18,7 +18,7 @@ dsh-tui-clawd
 
 | Patch | Effect |
 |---|---|
-| `assets/deepy/frames.json` | launch page mascot (20 animations, 198 frames) → crab |
+| `assets/deepy/frames.json` | companion + launch-page mascot: 20 animations, 70 crab frames (walking legs, blinks, squints) |
 | `lib/types/components/whaleFrames.js` | classic whale splash sprite (22 frames) → crab |
 | `launchpadLayout.js` | on short terminals show the mascot **instead of** the block `DEEPSEEK HARNESS` title |
 | `LogoV2.js` | the launchpad hides the block title when only the mascot fits |
@@ -39,6 +39,29 @@ The crab takes the active theme's accent colour, so `/theme` recolours it live:
 
 Eyes are derived from the body colour (28 % brightness), so contrast survives
 in both dark and light palettes.
+
+### Animated companion
+
+The crab is not a still image: every one of dsh-TUI's 20 companion animations
+gets its own frame script (70 frames total), so the mascot reacts to what the
+harness is doing.
+
+| State | Crab |
+|---|---|
+| idle | stands, bobs down on its legs, blinks every cycle |
+| thinking | looks up, squints, taps legs slowly |
+| typing / building | legs drum fast, body crouches, eyes squint |
+| working (music / conducting / carrying) | legs alternate, occasional blink |
+| happy / done | `^^` eyes, small jump |
+| error | `X` eyes, crouch |
+| sleeping | eyes closed, slow breathing bob |
+| poke / tickle / drag | looks to the side, wiggles, wide eyes |
+
+The big launch-page crab plays the `idle` loops too, so it breathes and blinks
+instead of standing still.
+
+**Turning the little one off:** dsh-TUI already exposes it as a side panel —
+`/settings` → Side panel → untick **Companion**. The big splash crab stays.
 
 ### Auto-scaling
 
