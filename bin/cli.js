@@ -181,6 +181,40 @@ Flags:
     return 0;
   }
 
+  if (command === 'map') {
+    const rows = [
+      ['reading', 'pwsh: Get-Content, cat, type, Get-ChildItem, ls, dir, Test-Path, Get-Item', 'read'],
+      ['search', 'pwsh: Select-String, findstr, rg, grep', 'grep, glob, web_search'],
+      ['ide-connected', 'pwsh: Set-Content, Out-File, Add-Content, apply_patch, New-Item, Remove-Item, Copy-Item, >>, tee', 'edit, write, multiedit'],
+      ['bash', 'pwsh: everything else', 'bash, powershell, pwsh'],
+      ['browser', 'when a web page is opened', 'web_fetch, fetch, browser'],
+      ['git', 'git commands', 'git*'],
+      ['tests-pass', 'test runs', '*test*'],
+      ['build', 'builds', '*build*'],
+      ['debug', 'debugger work', '*debug*'],
+      ['todo-list', 'task lists', '*todo*'],
+      ['database', 'SQL work', '*database*, *sql*'],
+      ['download', 'downloads', '*download*'],
+      ['memory-write', 'memory writes', '*memory*'],
+      ['docs-read', 'doc reading', '*doc*'],
+      ['ask', 'the question panel is open', 'question line in the activity state'],
+      ['permission', 'approval prompt', 'permission, approval'],
+      ['thinking-aloud', 'subagents', 'subagent, task, job, workflow'],
+      ['thinking', 'model is reasoning (no tool yet)', '-'],
+      ['dj', 'Windows media session is playing (GSMTC)', 'any player: Liner, Spotify, Yandex, AIMP, browser'],
+      ['celebrate', 'one continuous run over 5 minutes', '-'],
+      ['idle', 'default rest pose (95%)', '-'],
+      ['idle-coffee / idle-book / idle-juggle / idle-yawn / idle-look', 'calm idle picked once per rest (5%)', '-'],
+      ['idle-doze', 'no activity for 3 minutes', '-'],
+    ];
+    const w = Math.max(...rows.map((r) => r[0].length));
+    const w2 = Math.max(...rows.map((r) => r[1].length));
+    console.log(`${'ANIMATION'.padEnd(w)}  ${'WHEN IT PLAYS'.padEnd(w2)}  TOOLS / TRIGGERS`);
+    console.log(`${'-'.repeat(w)}  ${'-'.repeat(w2)}  ${'-'.repeat(20)}`);
+    for (const [name, when, tools] of rows) console.log(`${name.padEnd(w)}  ${when.padEnd(w2)}  ${tools}`);
+    return 0;
+  }
+
   if (command !== 'install') {
     console.error(`Unknown command: ${command} (try --help)`);
     return 2;
