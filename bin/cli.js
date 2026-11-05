@@ -139,6 +139,48 @@ Flags:
     return 0;
   }
 
+  if (command === 'sets') {
+    const dir = path.join(os.homedir(), '.dsh-tui', 'crab');
+    if (!fs.existsSync(dir)) {
+      console.log(`No crab frames yet: ${dir}`);
+      return 0;
+    }
+    for (const name of fs.readdirSync(dir).sort()) {
+      const full = path.join(dir, name);
+      if (!fs.statSync(full).isDirectory()) continue;
+      const frames = fs.readdirSync(full).filter((file) => file.endsWith('.png')).length;
+      console.log(`  ${name.padEnd(16)} ${String(frames).padStart(2)} frames`);
+    }
+    return 0;
+  }
+
+  if (command === 'pose') {
+    const name = argv[1];
+    const seconds = Number(argv[2] ?? 10);
+    if (!name) {
+      console.log('usage: dsh-tui-clawd pose <set> [seconds]');
+      return 1;
+    }
+    const dir = path.join(os.homedir(), '.dsh-tui');
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(
+      path.join(dir, 'clawd-force.json'),
+      JSON.stringify({ set: name, until: Date.now() + seconds * 1000 }),
+      'utf8',
+    );
+    console.log(`pose ${name} for ${seconds}s`);
+    return 0;
+  }
+
+  if (command === 'state') {
+    const dir = path.join(os.homedir(), '.dsh-tui');
+    for (const file of ['clawd-state.json', 'clawd-tool.json', 'clawd-music.json', 'clawd-force.json']) {
+      const full = path.join(dir, file);
+      console.log(`${file.padEnd(20)} ${fs.existsSync(full) ? fs.readFileSync(full, 'utf8') : '(missing)'}`);
+    }
+    return 0;
+  }
+
   if (command !== 'install') {
     console.error(`Unknown command: ${command} (try --help)`);
     return 2;
